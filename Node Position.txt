@@ -1,0 +1,411 @@
+Name:Md.Zian Miah ID:42230200819
+Task 1
+Create a basic singly linked list structure in C. Define a structure for a node 
+that holds an
+integer value and a pointer to the next node. Implement functions to add nodes 
+at the
+beginning and end of the list.
+Sample Input:
+- Add 5 to the beginning.
+- Add 10 to the end.
+- Add 15 to the end.
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+ int data;
+ struct Node* next;
+};
+struct Node* createNode(int data) {
+ struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+newNode->data = data;
+newNode->next = NULL;
+ return newNode;
+}
+struct Node* addToBeginning(struct Node* head, int data) {
+ struct Node* newNode = createNode(data);
+newNode->next = head;
+ return newNode;
+}
+void addToEnd(struct Node* head, int data) {
+ struct Node* newNode = createNode(data);
+ if (head == NULL) {
+ head = newNode;
+ return;
+ }
+ struct Node* current = head;
+ while (current->next != NULL) {
+ current = current->next;
+ }
+ current->next = newNode;
+}
+void printList(struct Node* head) {
+ struct Node* current = head;
+ while (current != NULL) {
+printf("%d", current->data);
+ if (current->next != NULL) {
+printf("->");
+ }
+ current = current->next;
+ }
+printf("\n");
+}
+int main() {
+ struct Node* head = NULL;
+ head = addToBeginning(head, 5);
+addToEnd(head, 10);
+addToEnd(head, 15);
+printf("Linked List: ");
+printList(head);
+ return 0;
+}
+Output:Linked List: 5->10->15
+Process returned 0 (0x0) execution time : 2.925 s
+Press any key to continue.
+Task 2:
+Extend your linked list operations. Implement functions to insert a node after a
+specific value
+or at a given position and to delete nodes with a given value or at a given 
+position.
+Sample Input:
+- Insert 25 after 10.
+- Delete the node with the value 10.
+- Insert 20 at position 2.
+- Delete the node at position 3.
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+ int data;
+ struct Node* next;
+};
+struct Node* createNode(int data) {
+ struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+ newNode->data = data;
+ newNode->next = NULL;
+ return newNode;
+}
+struct Node* addToBeginning(struct Node* head, int data) {
+ struct Node* newNode = createNode(data);
+ newNode->next = head;
+ return newNode;
+}
+void addToEnd(struct Node* head, int data) {
+ struct Node* newNode = createNode(data);
+ if (head == NULL) {
+ head = newNode;
+ return;
+ }
+ struct Node* current = head;
+ while (current->next != NULL) {
+ current = current->next;
+ }
+ current->next = newNode;
+}
+struct Node* insertAfterValue(struct Node* head, int value, int data) {
+ struct Node* newNode = createNode(data);
+ struct Node* current = head;
+ while (current != NULL) {
+ if (current->data == value) {
+ newNode->next = current->next;
+ current->next = newNode;
+ return head;
+ }
+ current = current->next;
+ }
+ return head;
+}
+void deleteNodeByValue(struct Node* head, int value) {
+ struct Node* current = head;
+ while (current->next != NULL) {
+ if (current->next->data == value) {
+ struct Node* temp = current->next;
+ current->next = temp->next;
+ free(temp);
+ return;
+ }
+ current = current->next;
+ }
+}
+struct Node* insertAtPosition(struct Node* head, int position, int data) {
+ struct Node* newNode = createNode(data);
+ if (position == 0) {
+ newNode->next = head;
+ return newNode;
+ }
+ struct Node* current = head;
+ int index = 0;
+ while (current != NULL && index < position - 1) {
+ current = current->next;
+ index++;
+ }
+ if (current == NULL) {
+ return head;
+ }
+ newNode->next = current->next;
+ current->next = newNode;
+ return head;
+}
+void deleteNodeAtPosition(struct Node* head, int position) {
+ if (position == 0) {
+ struct Node* temp = head;
+ head = head->next;
+ free(temp);
+ return;
+ }
+ struct Node* current = head;
+ int index = 0;
+ while (current != NULL && index < position - 1) {
+ current = current->next;
+ index++;
+ }
+ if (current == NULL || current->next == NULL) {
+ return;
+ }
+ struct Node* temp = current->next;
+ current->next = temp->next;
+ free(temp);
+}
+void printList(struct Node* head) {
+ struct Node* current = head;
+ while (current != NULL) {
+ printf("%d", current->data);
+ if (current->next != NULL) {
+ printf(" -> ");
+ }
+ current = current->next;
+ }
+ printf("\n");
+}
+int main() {
+ struct Node* head = NULL;
+ head = addToBeginning(head, 5);
+ addToEnd(head, 10);
+ addToEnd(head, 15);
+ head = insertAfterValue(head, 10, 25);
+ deleteNodeByValue(head, 10);
+ head = insertAtPosition(head, 2, 20);
+ deleteNodeAtPosition(head, 3);
+ printf("Linked List: ");
+ printList(head);
+ return 0;
+}
+Output:Linked List: 5 -> 25 -> 20
+Process returned 0 (0x0) execution time : 0.156 s
+Press any key to continue.
+Task 3:
+Learn to reverse the linked list in-place. Implement a function that changes the
+order of nodes
+in the list.
+Sample Input:
+- Reverse the linked list.
+Sample Output:
+Linked List: 20 -> 25 -> 5
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+ int data;
+ struct Node* next;
+};
+struct Node* createNode(int data) {
+ struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+newNode->data = data;
+newNode->next = NULL;
+ return newNode;
+}
+struct Node* insert(struct Node* head, int data) {
+ struct Node* newNode = createNode(data);
+newNode->next = head;
+ return newNode;
+}
+void printList(struct Node* head) {
+ struct Node* current = head;
+ while (current != NULL) {
+printf("%d", current->data);
+ if (current->next != NULL) {
+printf(" -> ");
+}current = current->next;
+ }
+printf("\n");
+}
+struct Node* reverseList(struct Node* head) {
+ struct Node* prev = NULL;
+ struct Node* current = head;
+ struct Node* next = NULL;
+ while (current != NULL) {
+ next = current->next;
+ current->next = prev;
+prev = current;
+ current = next;
+ }
+ return prev;
+}
+int main() {
+ struct Node* head = NULL;
+ head = insert(head, 5);
+ head = insert(head, 25);
+ head = insert(head, 20);
+printf("Original: ");
+printList(head);
+ head = reverseList(head);
+printf("Reversed: ");
+printList(head);
+ return 0;
+}
+Output:Original: 20 -> 25 -> 5
+Reversed: 5 -> 25 -> 20
+Process returned 0 (0x0) execution time : 0.061 s
+Press any key to continue.
+Task 4:
+Implement a function to check if a linked list contains a cycle.
+Sample Input:
+- Create a linked list with a cycle.
+Sample Output:
+Has Cycle: Yes
+Cycle Start Node: 10
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+ int data;
+ struct Node* next;
+};
+struct Node* createNode(int data) {
+ struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+newNode->data = data;
+newNode->next = NULL;
+ return newNode;
+}
+void addNode(struct Node** head, int data) {
+ struct Node* newNode = createNode(data);
+newNode->next = *head;
+ *head = newNode;
+}
+int hasCycle(struct Node* head, struct Node** cycleStart) {
+ struct Node* slow = head;
+ struct Node* fast = head;
+ while (fast != NULL && fast->next != NULL) {
+ slow = slow->next;
+ fast = fast->next->next;
+ if (slow == fast) {
+ slow = head;
+ while (slow != fast) {
+ slow = slow->next;
+ fast = fast->next;
+ }*cycleStart = slow;
+ return 1;
+ }
+ }
+ return 0;
+}
+int main() {
+ struct Node* head = NULL;
+ struct Node* cycleStart = NULL;
+addNode(&head, 10);
+addNode(&head, 20);
+addNode(&head, 30);
+addNode(&head, 40);
+addNode(&head, 50);
+ struct Node* node50 = head;
+ while (node50->next != NULL) {
+ node50 = node50->next;
+ }
+ struct Node* node10 = head;
+ while (node10->next != NULL) {
+ node10 = node10->next;
+ }
+ node50->next = node10;
+ int result = hasCycle(head, &cycleStart);
+ if (result) {
+printf("Has Cycle: Yes\n");
+printf("Cycle Start Node: %d\n", cycleStart->data);
+ } else {
+printf("Has Cycle: No\n");
+ }
+ return 0;
+}
+Output:Has Cycle: Yes
+Cycle Start Node: 10
+Process returned 0 (0x0) execution time : 6.848 s
+Press any key to continue.
+Task 5:
+Build on your knowledge by merging two sorted linked lists into one sorted list.
+Implement a
+function to do this while updating the head pointers correctly.
+Sample Input:
+- Merge two sorted lists: List A: 5 -> 10, List B: 7 -> 12.
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+ int data;
+ struct Node* next;
+};
+struct Node* createNode(int data) {
+ struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+newNode->data = data;
+newNode->next = NULL;
+ return newNode;
+}
+void append(struct Node** head, int data) {
+ struct Node* newNode = createNode(data);
+ if (*head == NULL) {
+ *head = newNode;
+ } else {
+ struct Node* current = *head;
+ while (current->next != NULL) {
+ current = current->next;
+ }
+ current->next = newNode;
+ }
+}
+struct Node* mergeSortedLists(struct Node* list1, struct Node* list2) {
+ struct Node* mergedList = NULL;
+ while (list1 != NULL && list2 != NULL) {
+ if (list1->data < list2->data) {
+append(&mergedList, list1->data);
+ list1 = list1->next;
+ } else {
+append(&mergedList, list2->data);
+ list2 = list2->next;
+ }
+ }
+ while (list1 != NULL) {
+append(&mergedList, list1->data);
+ list1 = list1->next;
+ }
+ while (list2 != NULL) {
+append(&mergedList, list2->data);
+ list2 = list2->next;
+ }
+ return mergedList;
+}
+void printList(struct Node* head) {
+ struct Node* current = head;
+ while (current != NULL) {
+printf("%d", current->data);
+ if (current->next != NULL) {
+printf(" -> ");
+ }
+ current = current->next;
+ }
+printf("\n");
+}
+int main() {
+ struct Node* list1 = NULL;
+ struct Node* list2 = NULL;
+append(&list1, 5);
+append(&list1, 10);
+append(&list2, 7);
+append(&list2, 12);
+printf("List1: ");
+printList(list1);
+printf("List 2: ");
+printList(list2);
+ struct Node* mergedList = mergeSortedLists(list1, list2);
+printf("Merged List: ");
+printList(mergedList);
+ return 0;
+}
+Output:
+List1: 5 -> 10
+List 2: 7 -> 12
+Merged List: 5 -> 7 -> 10 -> 12
+Process returned 0 (0x0) execution time : 0.080 s
+Press any key to continue.
